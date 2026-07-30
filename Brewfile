@@ -18,8 +18,12 @@ brew "fastfetch"
 brew "fd"
 # Command-line fuzzy finder written in Go
 brew "fzf"
-# Distributed revision control system
+# C string library for manipulating Unicode strings
+brew "gh"
+# Conversion library
 brew "git"
+# GNU Privacy Guard (OpenPGP)
+brew "gnupg"
 # Colorize logfiles and command output
 brew "grc"
 # Kubernetes package manager
@@ -44,10 +48,14 @@ brew "mole"
 brew "neovim"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
+# Easiest, most secure way to use WireGuard and 2FA
+brew "tailscale"
 # User interface to the TELNET protocol
 brew "telnet"
 # Terminal multiplexer
 brew "tmux"
+# Executes a program periodically, showing output fullscreen
+brew "watch"
 # UNIX shell (command interpreter)
 brew "zsh"
 # Menu bar tool to limit maximum charging percentage
@@ -56,31 +64,49 @@ cask "aldente"
 cask "bitwarden"
 # Send any size file between devices
 cask "blip"
-# OpenAI's coding agent that runs in your terminal
-cask "codex"
-# OpenAI's Codex desktop app for managing coding agents
-cask "codex-app"
+# OpenAI's official ChatGPT desktop app
+cask "chatgpt"
+# Voice and text chat software
 # Universal database tool and SQL client
 cask "dbeaver-community"
+cask "discord"
 # Window peeking utility app
 cask "dockdoor"
+# App to build and share containerised applications and microservices
+cask "docker-desktop"
 cask "font-d2coding-nerd-font"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
+# Web browser
+cask "google-chrome"
+# Client for the Google Drive storage service
+cask "google-drive"
+# Libhangul-based keyboard input
+cask "gureumkim"
+# View and edit HWP documents
+cask "hop"
 # Testing client for REST, GraphQL, and HTTP APIs
 cask "httpie-desktop"
+# Free and open-source media player
+cask "iina"
 # File archiver
 cask "keka"
 # Agent-centric IDE with spec-driven development
 cask "kiro"
+# Spreadsheet software
+cask "microsoft-excel"
+# Presentation software
+cask "microsoft-powerpoint"
+# Word processor
+cask "microsoft-word"
 # App to write, plan, collaborate, and get organised
 cask "notion"
 # Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
+# Get up and running with large language models locally
+cask "ollama-app"
 # AI usage tracker for Cursor, Claude Code, Codex, Copilot and more
 cask "openusage"
-# Replacement for Docker Desktop
-cask "orbstack"
 # Native macOS SSH terminal with Ghostty and SFTP
 cask "osxterm/osxterm/osxterm"
 # Control your tools with a few keystrokes
@@ -89,6 +115,8 @@ cask "raycast"
 cask "rectangle"
 # Tool to reverse the direction of scrolling
 cask "scroll-reverser"
+# Team communication and collaboration software
+cask "slack"
 # System monitor for the menu bar
 cask "stats"
 # SSH client
@@ -101,28 +129,34 @@ cask "typora@dev"
 cask "utm"
 # Open-source code editor
 cask "visual-studio-code"
-# Menu bar utility for viewing and switching Spaces
-cask "whichspace"
+# Full-featured companion app to the YubiKey
+cask "yubico-authenticator"
+# Video communication and virtual meeting platform
+cask "zoom"
 mas "Amphetamine", id: 937984704
+mas "BandiNamer", id: 6451223045
+mas "Keynote", id: 409183694
+mas "Day Progress", id: 6450280202
+mas "Folder Preview", id: 6698876601
 mas "Hidden Bar", id: 1452453066
-mas "RunCat", id: 1429033973
+mas "KakaoTalk", id: 869223134
+mas "Launchy", id: 6739782043
+mas "Markdown Preview", id: 6739955340
 mas "RunCatNeo", id: 6757801838
+mas "Spark Desktop", id: 6445813049
+mas "Tailscale", id: 1475387142
 mas "Windows App", id: 1295203466
-mas "Yubico Authenticator", id: 1497506650
-mas "반디네이머", id: 6451223045
-mas "카카오톡", id: 869223134
+mas "Xcode", id: 497799835
 vscode "4ops.terraform"
-vscode "aaron-bond.better-comments"
-vscode "albert.tabout"
 vscode "alefragnani.project-manager"
 vscode "amazonwebservices.amazon-q-vscode"
 vscode "amazonwebservices.aws-toolkit-vscode"
 vscode "bracketpaircolordlw.bracket-pair-color-dlw"
 vscode "christian-kohler.path-intellisense"
-vscode "codezombiech.gitignore"
 vscode "compulim.vscode-ipaddress"
 vscode "cweijan.dbclient-jdbc"
 vscode "cweijan.vscode-mysql-client2"
+vscode "dart-code.dart-code"
 vscode "dbaeumer.vscode-eslint"
 vscode "docker.docker"
 vscode "dsznajder.es7-react-js-snippets"
@@ -131,7 +165,6 @@ vscode "esbenp.prettier-vscode"
 vscode "formulahendry.auto-close-tag"
 vscode "formulahendry.auto-rename-tag"
 vscode "formulahendry.code-runner"
-vscode "github.vscode-github-actions"
 vscode "github.vscode-pull-request-github"
 vscode "golang.go"
 vscode "hashicorp.terraform"
@@ -160,6 +193,7 @@ vscode "ms-vscode.cpptools"
 vscode "ms-vscode.cpptools-extension-pack"
 vscode "ms-vscode.cpptools-themes"
 vscode "ms-vscode.remote-explorer"
+vscode "njpwerner.autodocstring"
 vscode "openai.chatgpt"
 vscode "pkief.material-icon-theme"
 vscode "redhat.java"
@@ -179,5 +213,3 @@ vscode "vscjava.vscode-maven"
 vscode "vscjava.vscode-spring-boot-dashboard"
 vscode "vscjava.vscode-spring-initializr"
 vscode "yzhang.markdown-all-in-one"
-go "cmd/go"
-go "cmd/gofmt"
