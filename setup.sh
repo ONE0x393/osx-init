@@ -24,6 +24,8 @@ cp -lp assets/.zshrc ~/.zshrc
 SSH_CONFIG="$HOME/.ssh/config"
 GIT_USER="Howon Jeong"
 GIT_EMAIL="howon2k@me.com"
+
+mkdir -p ~/.ssh
 git config --global url."git@github.com-home:ONE0x393/".insteadOf "git@github.com:ONE0x393/"
 
 if command grep -Fqx "Host github.com-home" "$SSH_CONFIG"; then
