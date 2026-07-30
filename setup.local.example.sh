@@ -1,6 +1,0 @@
-GITHUB_HOME_ACCOUNT="YOUR GITHUB NAME"
-GIT_NAME="Your Name"
-GIT_EMAIL="Your Email"
-
-SSH_IDENTITY_AGENT="$HOME/.bitwarden-ssh-agent.sock"
-SSH_IDENTITY_FILE="$HOME/.ssh/bitwarden/EXAMPLE.pub"

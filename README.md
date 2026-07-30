@@ -8,8 +8,8 @@
 .
 ├── Brewfile                 # Homebrew formula, cask, MAS 앱, VS Code 확장 목록
 ├── setup.sh                 # 최초 환경 구성 스크립트
-├── setup.local.example.sh   # 개인별 설정 템플릿
-├── setup.local.sh           # 개인별 실제 설정(.gitignore 대상)
+├── .env.example             # 개인별 환경 변수 템플릿
+├── .env                     # 개인별 실제 환경 변수(.gitignore 대상)
 ├── assets/
 │   ├── .zshrc               # Zsh 설정
 │   └── .config/             # Neovim 등 XDG 설정
@@ -50,34 +50,61 @@ cd "$HOME/.config/homebrew"
 > [!IMPORTANT]
 > 현재 `setup.sh`의 `brew bundle install`은 실행 중인 디렉터리에서 `Brewfile`을 찾습니다. 반드시 저장소 루트에서 실행하세요.
 
-### 2. 개인 설정 파일 생성
+### 2. 환경 변수 파일 생성
 
 템플릿을 복사한 뒤 본인 환경에 맞게 수정합니다.
 
 ```bash
-cp setup.local.example.sh setup.local.sh
-chmod 600 setup.local.sh
-vi setup.local.sh
+cp .env.example .env
+chmod 600 .env
+vi .env
 ```
 
-`setup.local.sh`은 `.gitignore`에 포함되어 Git에 커밋되지 않습니다.
+`.env`는 `.gitignore`에 포함되어 Git에 커밋되지 않습니다.
 
 ```bash
+# Git 및 SSH
+GITHUB_HOST="github.com"
+GIT_SSH_HOST_ALIAS="github.com-home"
 GITHUB_HOME_ACCOUNT="your-github-account"
 GIT_NAME="Your Name"
 GIT_EMAIL="you@example.com"
 
+SSH_CONFIG="$HOME/.ssh/config"
 SSH_IDENTITY_AGENT="$HOME/.bitwarden-ssh-agent.sock"
 SSH_IDENTITY_FILE="$HOME/.ssh/bitwarden/github.com_example.pub"
+
+# macOS 및 개발 도구 경로
+ICLOUD_SOURCE="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
+ICLOUD_LINK="$HOME/iCloud"
+OH_MY_ZSH_DIR="${ZSH:-$HOME/.oh-my-zsh}"
+POWERLEVEL10K_DIR="${ZSH_CUSTOM:-$OH_MY_ZSH_DIR/custom}/themes/powerlevel10k"
+
+# dotfiles 및 Git config 경로
+DOTFILES_SOURCE="$REPO_ROOT/assets/.config"
+DOTFILES_TARGET="$HOME/.config"
+ZSHRC_SOURCE="$REPO_ROOT/assets/.zshrc"
+ZSHRC_TARGET="$HOME/.zshrc"
+ZSHRC_BACKUP="$HOME/.zshrc.bak"
+GIT_CONFIG="${GIT_CONFIG:-$HOME/.gitconfig}"
+GIT_HOME_CONFIG="$DOTFILES_TARGET/git/.gitconfig-home"
 ```
+
+`.env`는 `REPO_ROOT`를 계산한 뒤 `setup.sh`에서 불러오므로, 템플릿에 있는 `$REPO_ROOT` 기반 경로를 그대로 사용할 수 있습니다.
 
 | 변수 | 설명 |
 | --- | --- |
-| `GITHUB_HOME_ACCOUNT` | 개인 GitHub 계정 또는 namespace. Git URL rewrite에 사용됩니다. |
-| `GIT_NAME` | 개인 Git 사용자 이름입니다. |
-| `GIT_EMAIL` | 개인 Git 이메일 주소입니다. |
-| `SSH_IDENTITY_AGENT` | Bitwarden SSH agent Unix socket 경로입니다. |
-| `SSH_IDENTITY_FILE` | GitHub용 SSH 공개키(`.pub`) 경로입니다. |
+| `GITHUB_HOST` | GitHub 호스트 이름입니다. |
+| `GIT_SSH_HOST_ALIAS` | `~/.ssh/config`에 생성할 GitHub SSH host alias입니다. |
+| `GITHUB_HOME_ACCOUNT` | 개인 GitHub 계정 또는 namespace입니다. |
+| `GIT_NAME` / `GIT_EMAIL` | 개인 Git 사용자 이름과 이메일입니다. |
+| `SSH_CONFIG` | SSH config 파일 경로입니다. |
+| `SSH_IDENTITY_AGENT` / `SSH_IDENTITY_FILE` | SSH agent socket 및 GitHub 공개키 경로입니다. |
+| `ICLOUD_SOURCE` / `ICLOUD_LINK` | iCloud Drive 원본과 생성할 심볼릭 링크 경로입니다. |
+| `OH_MY_ZSH_DIR` / `POWERLEVEL10K_DIR` | Oh My Zsh와 Powerlevel10k 설치 경로입니다. |
+| `DOTFILES_SOURCE` / `DOTFILES_TARGET` | `.config` hard link 동기화의 원본과 대상 경로입니다. |
+| `ZSHRC_SOURCE` / `ZSHRC_TARGET` / `ZSHRC_BACKUP` | `.zshrc` 원본·대상·백업 경로입니다. |
+| `GIT_CONFIG` / `GIT_HOME_CONFIG` | 전역 Git config와 생성할 개인 Git config 경로입니다. |
 
 개인키, GitHub Personal Access Token, Bitwarden access token, 비밀번호, 복구 코드는 이 파일이나 저장소에 저장하지 마세요.
 
@@ -107,10 +134,10 @@ brew bundle check --file Brewfile
 brew bundle install --file Brewfile
 ```
 
-개인 설정 파일이 무시되는지도 확인할 수 있습니다.
+개인 환경 변수 파일이 무시되는지도 확인할 수 있습니다.
 
 ```bash
-git check-ignore -v setup.local.sh
+git check-ignore -v .env
 ```
 
 Git conditional include와 SSH host 설정은 다음 명령으로 확인합니다.
@@ -124,11 +151,11 @@ ssh -G github.com-home
 
 - 패키지, 앱, VS Code 확장은 `Brewfile`에서 관리합니다.
 - Zsh 및 XDG 설정의 원본은 `assets` 디렉터리입니다.
-- 개인별 Git/SSH 값은 `setup.local.sh`에서만 관리합니다.
-- `setup.local.sh`을 수정했으면 Git에 추가하지 마세요.
+- 개인별 Git/SSH 값은 `.env`에서만 관리합니다.
+- `.env`를 수정했으면 Git에 추가하지 마세요.
 
 > [!NOTE]
-> 현재 설정 배포는 `cp -Rlp`를 사용합니다. `-l` 옵션은 파일을 hard link로 배포하므로, 홈 디렉터리의 배포된 설정을 수정하면 저장소의 원본 파일도 같은 inode를 공유해 함께 바뀔 수 있습니다. `assets`를 설정의 기준 원본으로 취급하고, 변경 후 `git status`를 확인하세요.
+> `.config` 배포는 `rsync -a --link-dest=assets/.config`를 사용합니다. 새로 배포하거나 갱신하는 파일은 `assets/.config`의 같은 파일과 hard link를 공유하며, 재실행 시 이미 동일한 파일을 복사해 발생하던 오류가 없습니다. 대상에만 있는 파일은 삭제하지 않습니다. `~/.zshrc`도 hard link로 배포합니다.
 
 ## 문제 해결
 
@@ -162,6 +189,6 @@ test -S "$SSH_IDENTITY_AGENT" && echo "SSH agent is available"
 
 ## 보안 및 운영 원칙
 
-- `setup.local.sh`은 개인별 경로와 identity를 위한 파일이지 비밀 저장소가 아닙니다.
+- `.env`는 개인별 경로와 identity를 위한 파일이지 비밀 저장소가 아닙니다.
 - 원격 installer와 Git repository에서 코드를 내려받아 실행하므로, 실행 전에 `setup.sh`, `Brewfile`의 변경 사항을 검토하세요.
-- 이 저장소를 다른 사용자 또는 다른 GitHub 계정에서도 사용할 계획이라면 `setup.local.example.sh`만 공유하고 `setup.local.sh`은 새로 만드세요.
+- 이 저장소를 다른 사용자 또는 다른 GitHub 계정에서도 사용할 계획이라면 `.env.example`만 공유하고 `.env`는 새로 만드세요.
