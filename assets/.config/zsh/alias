@@ -1,0 +1,24 @@
+# Aliases
+alias vim="nvim"
+alias ll="ls -alhF"
+alias l="ls -lhF"
+alias cat="bat -p"
+alias grep="rg"
+alias find="fd"
+alias du="dust -rb"
+alias df="duf"
+alias top="btop"
+
+alias ip="ip -c"
+
+alias grep="grc grep"
+alias ifconfig="grc ifconfig"
+alias ping="grc ping"
+alias netstat="grc netstat"
+alias lsof="grc lsof"
+
+alias tf="terraform"
+alias k="kubectl"
+
+alias python="python3"
+alias pip="pip3"
