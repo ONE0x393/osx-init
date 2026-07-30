@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -xo pipefail
+set -Eeuo pipefail
 
 # 1. Homebrew 설치
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -27,7 +27,7 @@ GIT_EMAIL="howon2k@me.com"
 git config --global url."git@github.com-home:ONE0x393/".insteadOf "git@github.com:ONE0x393/"
 
 if command grep -Fqx "Host github.com-home" "$SSH_CONFIG"; then
-    print "이미 존재함: Host github.com-home"
+    printf "이미 존재함: Host github.com-home"
 else
     [[ -s "$SSH_CONFIG" ]] && printf '\n' >>"$SSH_CONFIG"
 
@@ -39,7 +39,7 @@ else
     IdentityFile ~/.ssh/bitwarden/github.com_one0x393.pub
     IdentitiesOnly yes' >>"$SSH_CONFIG"
 
-    print "추가 완료: $SSH_CONFIG"
+    printf "추가 완료: $SSH_CONFIG"
 fi
 
 GIT_CONFIG="${GIT_CONFIG:-$HOME/.gitconfig}"
@@ -52,10 +52,10 @@ touch "$GIT_CONFIG"
 
 if command grep -Fqx "$line1" "$GIT_CONFIG" &&
     command grep -Fqx "$line2" "$GIT_CONFIG"; then
-    print "Git include 설정이 이미 존재합니다."
+    printf "Git include 설정이 이미 존재합니다."
 elif command grep -Fq "$line1" "$GIT_CONFIG" ||
     command grep -Fq "$line2" "$GIT_CONFIG"; then
-    print -u2 "Git include 설정이 일부만 존재합니다. 수동 확인이 필요합니다."
+    printf "Git include 설정이 일부만 존재합니다. 수동 확인이 필요합니다."
     exit 1
 else
     [[ -s "$GIT_CONFIG" ]] && printf '\n' >>"$GIT_CONFIG"
@@ -66,7 +66,7 @@ else
         "$line2" \
         "$path_line" >>"$GIT_CONFIG"
 
-    print "Git include 설정을 추가했습니다."
+    printf "Git include 설정을 추가했습니다."
 fi
 
 mkdir -p "$HOME/.config/git"
