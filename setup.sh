@@ -22,7 +22,10 @@ cp -lp assets/.zshrc ~/.zshrc
 
 # Git User 설정
 SSH_CONFIG="$HOME/.ssh/config"
-git config --global url."git@github.com-home:".insteadOf "git@github.com:one0x393/"
+GIT_USER="Howon Jeong"
+GIT_EMAIL="howon2k@me.com"
+git config --global url."git@github.com-home:ONE0x393/".insteadOf "git@github.com:ONE0x393/"
+
 if command grep -Fqx "Host github.com-home" "$SSH_CONFIG"; then
     print "이미 존재함: Host github.com-home"
 else
@@ -38,3 +41,36 @@ else
 
     print "추가 완료: $SSH_CONFIG"
 fi
+
+GIT_CONFIG="${GIT_CONFIG:-$HOME/.gitconfig}"
+
+line1='[includeIf "hasconfig:remote.*.url:git@github.com-home:**/**"]'
+line2='[includeIf "hasconfig:remote.*.url:git@github.com:ONE0x393/**"]'
+path_line='    path = ~/.config/git/.gitconfig-home'
+
+touch "$GIT_CONFIG"
+
+if command grep -Fqx "$line1" "$GIT_CONFIG" &&
+    command grep -Fqx "$line2" "$GIT_CONFIG"; then
+    print "Git include 설정이 이미 존재합니다."
+elif command grep -Fq "$line1" "$GIT_CONFIG" ||
+    command grep -Fq "$line2" "$GIT_CONFIG"; then
+    print -u2 "Git include 설정이 일부만 존재합니다. 수동 확인이 필요합니다."
+    exit 1
+else
+    [[ -s "$GIT_CONFIG" ]] && printf '\n' >>"$GIT_CONFIG"
+
+    printf '%s\n' \
+        "$line1" \
+        "$path_line" \
+        "$line2" \
+        "$path_line" >>"$GIT_CONFIG"
+
+    print "Git include 설정을 추가했습니다."
+fi
+
+mkdir -p "$HOME/.config/git"
+cat << EOF > "$HOME/.config/git/.gitconfig-home"
+[user]
+    name = Howon Jeong
+    email = howon2k@me.com
