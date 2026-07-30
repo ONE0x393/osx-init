@@ -70,7 +70,8 @@ else
 fi
 
 mkdir -p "$HOME/.config/git"
-cat << EOF > "$HOME/.config/git/.gitconfig-home"
+cat <<EOF >"$HOME/.config/git/.gitconfig-home"
 [user]
-    name = Howon Jeong
-    email = howon2k@me.com
+    name = $GIT_USER
+    email = $GIT_EMAIL
+EOF
