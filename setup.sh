@@ -1,6 +1,20 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -Eeuo pipefail
+
+readonly REPO_ROOT="$(
+  CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P
+)"
+LOCAL_CONFIG="$REPO_ROOT/setup.local.sh"
+
+if [[ -f "$LOCAL_CONFIG" ]]; then
+  source "$LOCAL_CONFIG"
+fi
+
+: "${GIT_NAME:?setup.local.sh에 GIT_NAME을 설정하세요.}"
+: "${GIT_EMAIL:?setup.local.sh에 GIT_EMAIL을 설정하세요.}"
+: "${GITHUB_HOME_ACCOUNT:?setup.local.sh에 GITHUB_HOME_ACCOUNT 설정하세요.}"
+
 
 # 1. Homebrew 설치
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -9,24 +23,24 @@ set -Eeuo pipefail
 brew bundle install
 
 # 3. iCloud 심볼릭 링크 지정
-ln -s /Users/$(whoami)/Library/Mobile\ Documents/com\~apple\~CloudDocs ~/iCloud
+ln -s "$HOME/Library/Mobile\ Documents/com\~apple\~CloudDocs" "$HOME/iCloud"
 
 # ~/.zshrc configuration 설정
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
+git clone --depth=1 \
+  https://github.com/romkatv/powerlevel10k.git \
+  "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
 
-cp -Rlp assets/.config/. ~/.config/
+cp -Rlp "$REPO_ROOT/assets/.config/." "$HOME/.config/"
 
-mv ~/.zshrc ~/.zshrc.bak
-cp -lp assets/.zshrc ~/.zshrc
+mv "$HOME/.zshrc" "$HOME/.zshrc.bak"
+cp -lp "$REPO_ROOT/assets/.zshrc" "$HOME/.zshrc"
 
 # Git User 설정
 SSH_CONFIG="$HOME/.ssh/config"
-GIT_USER="Howon Jeong"
-GIT_EMAIL="howon2k@me.com"
 
 mkdir -p ~/.ssh
-git config --global url."git@github.com-home:ONE0x393/".insteadOf "git@github.com:ONE0x393/"
+git config --global url."git@github.com-home:$GITHUB_HOME_ACCOUNT/".insteadOf "git@github.com:$GITHUB_HOME_ACCOUNT/"
 
 if command grep -Fqx "Host github.com-home" "$SSH_CONFIG"; then
     printf "이미 존재함: Host github.com-home"
@@ -34,12 +48,12 @@ else
     [[ -s "$SSH_CONFIG" ]] && printf '\n' >>"$SSH_CONFIG"
 
     printf '%s\n' \
-        'Host github.com-home
-    HostName github.com
-    User git
-    IdentityAgent ~/.bitwarden-ssh-agent.sock
-    IdentityFile ~/.ssh/bitwarden/github.com_one0x393.pub
-    IdentitiesOnly yes' >>"$SSH_CONFIG"
+        'Host github.com-home' \
+        '    HostName github.com' \
+        '    User git' \
+        "    IdentityAgent $SSH_IDENTITY_AGENT" \
+        "    IdentityFile $SSH_IDENTITY_FILE" \
+        '    IdentitiesOnly yes' >>"$SSH_CONFIG"
 
     printf "추가 완료: $SSH_CONFIG"
 fi
@@ -74,6 +88,6 @@ fi
 mkdir -p "$HOME/.config/git"
 cat <<EOF >"$HOME/.config/git/.gitconfig-home"
 [user]
-    name = $GIT_USER
+    name = $GIT_NAME
     email = $GIT_EMAIL
 EOF
